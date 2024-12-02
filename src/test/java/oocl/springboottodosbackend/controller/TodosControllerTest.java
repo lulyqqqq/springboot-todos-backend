@@ -78,7 +78,7 @@ public class TodosControllerTest {
     }
 
     @Test
-    void should_return_todo_when_create_todo_success() throws Exception {
+    void should_create_todo_success() throws Exception {
         // Given
         todoRepository.deleteAll();
         String givenText = "text";
@@ -106,7 +106,23 @@ public class TodosControllerTest {
         AssertionsForClassTypes.assertThat(todos.get(0).getDone()).isFalse();
     }
 
+    @Test
+    void should_return_success_when_remove_todo_given_a_id() throws Exception {
+        // Given
+        final List<Todo> givenTodo = todoRepository.findAll();
+        int givenId = givenTodo.get(0).getId();
 
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.delete("/todos/" + givenId))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        List<Todo> todos = todoRepository.findAll();
+        assertThat(todos).hasSize(4);
+        AssertionsForClassTypes.assertThat(todos.get(0).getId()).isEqualTo(givenTodo.get(1).getId());
+        AssertionsForClassTypes.assertThat(todos.get(1).getId()).isEqualTo(givenTodo.get(2).getId());
+        AssertionsForClassTypes.assertThat(todos.get(2).getId()).isEqualTo(givenTodo.get(3).getId());
+        AssertionsForClassTypes.assertThat(todos.get(3).getId()).isEqualTo(givenTodo.get(4).getId());
+    }
 
 
 
