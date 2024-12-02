@@ -1,6 +1,5 @@
 package oocl.springboottodosbackend.service;
 
-import oocl.springboottodosbackend.GlobalException.GlobalExceptionHandler;
 import oocl.springboottodosbackend.exception.NotExistsException;
 import oocl.springboottodosbackend.model.Todo;
 import oocl.springboottodosbackend.repository.TodosRepository;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class TodoService {
