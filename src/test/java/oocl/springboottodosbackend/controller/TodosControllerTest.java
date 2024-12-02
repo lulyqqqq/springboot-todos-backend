@@ -157,7 +157,18 @@ public class TodosControllerTest {
 
     }
 
+    @Test
+    void should_return_TodoNotFoundException_when_get_by_error_id() throws Exception {
+        // Given
+        final Integer errorId = -1;
 
+        // When
+        // Then
+        String contentAsString = client.perform(MockMvcRequestBuilders.get("/todos/" + errorId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
+        AssertionsForClassTypes.assertThat(contentAsString).isEqualTo(NotExistsException.NOT_EXISTS);
+    }
 
 
 }
