@@ -64,7 +64,7 @@ public class TodosControllerTest {
     }
 
     @Test
-    void should_return_todo_when_get_by_id_given_a_todo() throws Exception {
+    void should_return_todo_when_get_by_id() throws Exception {
         // Given
         final Todo givenTodo = todoRepository.findAll().get(0);
 
@@ -77,7 +77,34 @@ public class TodosControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(givenTodo.getDone()));
     }
 
+    @Test
+    void should_return_todo_when_create_todo_success() throws Exception {
+        // Given
+        todoRepository.deleteAll();
+        String givenText = "text";
+        boolean givenDone = false;
 
+        String givenEmployee = String.format(
+                "{\"text\": \"%s\", \"done\": \"%b\"}",
+                givenText,
+                givenDone
+        );
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.post("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenEmployee)
+                )
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(givenText))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(givenDone));
+        List<Todo> todos = todoRepository.findAll();
+        assertThat(todos).hasSize(1);
+        AssertionsForClassTypes.assertThat(todos.get(0).getId()).isNotNull();
+        AssertionsForClassTypes.assertThat(todos.get(0).getText()).isEqualTo(givenText);
+        AssertionsForClassTypes.assertThat(todos.get(0).getDone()).isFalse();
+    }
 
 
 
